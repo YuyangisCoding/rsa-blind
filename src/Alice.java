@@ -6,21 +6,20 @@ import java.security.spec.RSAKeyGenParameterSpec;
 /**
  * The class AliceRSA represents Alice who can create an RSA keypair and can issue digital signatures
  */
-public class Alice
-{
+public class Alice {
     /**
      * Produces and returns an RSA keypair (N,e,d)
      * N: Modulus, e: Public exponent, d: Private exponent
      * The public exponent value is set to 3 and the keylength to 2048
+     *
      * @return RSA keypair
      */
-    public static KeyPair produceKeyPair()
-    {
-        try
-        {
+    public static KeyPair produceKeyPair() {
+        try {
             KeyPairGenerator rsaKeyPairGenerator = KeyPairGenerator.getInstance("RSA");  //get rsa key generator
 
-            RSAKeyGenParameterSpec spec = new RSAKeyGenParameterSpec(2048, BigInteger.valueOf(3)); //set the parameters for they key, key length=2048, public exponent=3
+            //set the parameters for they key, key length=2048, public exponent=3
+            RSAKeyGenParameterSpec spec = new RSAKeyGenParameterSpec(2048, BigInteger.valueOf(3));
 
             rsaKeyPairGenerator.initialize(spec); //initialise generator with the above parameters
 
@@ -28,9 +27,7 @@ public class Alice
 
             return (keyPair);  //return the key pair produced (N,e,d)
 
-        } 
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -40,13 +37,12 @@ public class Alice
      * Calculate mu' using the Chinese Remainder Theorem for optimization
      * Thanks to the isomorphism property f(x+y)=f(x)+f(y) we can split the mu^d modN in two:
      * one mode p , one mode q, and then we can combine the results to calculate muprime
+     *
      * @param mu
      * @return mu'
      */
-    public static BigInteger calculateMuPrimeWithChineseRemainderTheorem(BigInteger mu)
-    {
-        try
-        {
+    public static BigInteger calculateMuPrimeWithChineseRemainderTheorem(BigInteger mu) {
+        try {
             BigInteger N = BlindRsa.N; //get modulus N
 
             BigInteger P = BlindRsa.alicePrivate.getPrimeP(); //get the prime number p used to produce the key pair
@@ -69,14 +65,12 @@ public class Alice
 
             //We combine the calculated m1 and m2 in order to calculate muprime
             //We calculate muprime: (m1*Q*QinverseModP + m2*P*PinverseModQ) mod N where N =P*Q
-            
+
             BigInteger muprime = ((m1.multiply(Q).multiply(QinverseModP)).add(m2.multiply(P).multiply(PinverseModQ))).mod(N);
 
             return muprime;
 
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
