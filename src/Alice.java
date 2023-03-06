@@ -34,41 +34,16 @@ public class Alice {
     }
 
     /**
-     * Calculate mu' using the Chinese Remainder Theorem for optimization
-     * Thanks to the isomorphism property f(x+y)=f(x)+f(y) we can split the mu^d modN in two:
-     * one mode p , one mode q, and then we can combine the results to calculate muprime
-     *
+     * calculate mu' = mu^d mod N
      * @param mu
      * @return mu'
      */
     public static BigInteger calculateMuPrimeWithChineseRemainderTheorem(BigInteger mu) {
         try {
             BigInteger N = BlindRsa.N; //get modulus N
-
-            BigInteger P = BlindRsa.alicePrivate.getPrimeP(); //get the prime number p used to produce the key pair
-
-            BigInteger Q = BlindRsa.alicePrivate.getPrimeQ(); //get the prime number q used to produce the key pair
-
-            //We split the mu^d modN in two , one mode p , one mode q
-
-            BigInteger PinverseModQ = P.modInverse(Q); //calculate p inverse modulo q
-
-            BigInteger QinverseModP = Q.modInverse(P); //calculate q inverse modulo p
-
             BigInteger d = BlindRsa.alicePrivate.getPrivateExponent(); //get private exponent d
-
             //We split the message mu in to messages m1, m2 one mod p, one mod q
-
-            BigInteger m1 = mu.modPow(d, N).mod(P); //calculate m1=(mu^d modN)modP
-
-            BigInteger m2 = mu.modPow(d, N).mod(Q); //calculate m2=(mu^d modN)modQ
-
-            //We combine the calculated m1 and m2 in order to calculate muprime
-            //We calculate muprime: (m1*Q*QinverseModP + m2*P*PinverseModQ) mod N where N =P*Q
-
-            BigInteger muprime = ((m1.multiply(Q).multiply(QinverseModP)).add(m2.multiply(P).multiply(PinverseModQ))).mod(N);
-
-            return muprime;
+            return  mu.modPow(d, N);
 
         } catch (Exception e) {
             e.printStackTrace();
