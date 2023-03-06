@@ -42,7 +42,7 @@ public class Alice {
         try {
             BigInteger N = BlindRsa.N; //get modulus N
             BigInteger d = BlindRsa.alicePrivate.getPrivateExponent(); //get private exponent d
-            //We split the message mu in to messages m1, m2 one mod p, one mod q
+
             return  mu.modPow(d, N);
 
         } catch (Exception e) {
